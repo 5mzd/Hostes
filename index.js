@@ -16,7 +16,8 @@ app.get("/gethls", async (req, res) => {
       noCheckCertificate: true,
       noWarnings: true,
       preferFreeFormats: true,
-      youtubeSkipDashManifest: true
+      youtubeSkipDashManifest: true,
+      addHeader: ['referer:youtube.com', 'user-agent:Mozilla/5.0']
     });
 
     const hlsFormat = info.formats.find(f => f.protocol === "m3u8_native" || f.ext === "m3u8");
@@ -27,8 +28,8 @@ app.get("/gethls", async (req, res) => {
 
     res.json({ hls_url: hlsFormat.url });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "حدث خطأ أثناء جلب رابط HLS" });
+    console.error("تفاصيل الخطأ:", error);
+    res.status(500).json({ error: "حدث خطأ أثناء جلب رابط HLS", details: error.message });
   }
 });
 
